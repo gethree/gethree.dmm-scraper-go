@@ -1,11 +1,17 @@
 package dmmCoJp
 
+import (
+	"time"
+)
+
 // DmmCoJpItem : DmmCoJpItem Info Struct
 type DmmCoJpItem struct {
 	ItemCode             string
 	Title                string
 	PackageImageThumbURL string
 	PackageImageURL      string
+	SaleStartDate        time.Time
+	DistStartDate        time.Time
 	ActressList          []*Actress
 	DirectorList         []*Director
 	SeriesList           []*Series

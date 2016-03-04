@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -109,9 +110,22 @@ func ScrapeFromItemDetail(itemDetailURL string) *DmmCoJpItem {
 	// 配信開始日/商品発売日
 	doc.Find("table.mg-b20 td.nw").Each(func(_ int, s *goquery.Selection) {
 		content := s.Text()
-		if strings.Contains(content, "配信開始日") ||
-			strings.Contains(content, "商品発売日") {
-			fmt.Println(strings.TrimSpace(s.Next().Text()))
+
+		if strings.Contains(content, "商品発売日") ||
+			strings.Contains(content, "配信開始日") {
+			dateString := strings.TrimSpace(s.Next().Text())
+			dateTime, err := time.Parse("2006/01/02", dateString)
+
+			if err != nil {
+				return
+			}
+
+			if strings.Contains(content, "商品発売日") {
+				result.SaleStartDate = dateTime
+			} else if strings.Contains(content, "配信開始日") {
+				result.DistStartDate = dateTime
+			}
+
 		}
 	})
 
